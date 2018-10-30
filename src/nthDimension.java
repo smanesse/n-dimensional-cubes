@@ -1,49 +1,61 @@
 import java.util.Scanner;
 
 public class nthDimension {
-    static int n, k;
-    static int iteration = 0;
-    static int[] nums;
 
     public static void main(String[] args) {
-        setVars();
-        if (k == 0) {
-            System.out.println("Number of n-dimensional square in n-dimensional cuboid: 1");
-            return;
-        }
-        nums = new int[n];
-        for (int i = 0; i < nums.length; i++) {
-            nums[i] = i + 1;
-        }
-        sum(n - 1);
-        System.out.println("Number of " + (n - k) + "-dimensional square in " + n + "-dimensional cuboid: " + (int) Math.pow(2, k) * nums[n - k]);
-    }
+        int k, n;
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter the number of dimensions of the parent object (n): ");
+            n = scanner.nextInt();
 
-    static void sum(int max) {
-        int[] nums2 = nums.clone();
-        for (int i = 1; i <= max; i++) {
-            int localSum = 0;
-            for (int j = 0; j < i; j++) {
-                localSum += nums[j];
+            System.out.print("\nEnter the number of dimensions of the child object (m): ");
+            k = n - scanner.nextInt();
+            System.out.println();
+
+            if (n < 0 && k < 0) { //input validation
+                System.out.println("Please enter positive values.");
+            } else if (n < k) {
+                System.out.println("Please enter n and m such that m<n.");
+            } else if (k>30) {
+                System.out.println("Your numbers were too large.");
+            } else {
+                break;
             }
-            nums2[i - 1] = localSum;
         }
-        nums = nums2;
-        iteration++;
-        if (iteration < k - 1) {
-            sum(max);
+
+        long result;
+        if (k == 0) {
+            result = 1; //edge case
+        } else {
+            //create array of integers 1 through k.
+            long[] nums = new long[n - k+1];
+            for (int i = 1; i <= nums.length; i++) {
+                nums[i - 1] = i;
+            }
+
+            /*Recursively generates a set of numbers of a specific order. The difference between each number
+             *in the set is given by the number in the previous order set.
+             *The first few sets are listed here:
+             * 1   2   3   4   5   6
+             * 1   3   6  10  15  21
+             * 1   4  10  20  35  56
+             * 1   5  15  35  50 106
+             */
+            int iteration = 0;
+            do {
+                long[] nums2 = nums.clone();
+                for (int i = 0, localSum = 0; i <= n-k; i++) {
+                    localSum += nums[i];
+                    nums2[i] = localSum;
+                }
+                nums = nums2;
+                iteration++;
+            } while (iteration < k - 1);
+            result = (long) Math.pow(2, k) * nums[n - k]; //multiply the mth term of the k order set by 2^k
         }
+        System.out.printf("Number of %d-dimensional squares in %d-dimensional cuboid: %d", (n - k), n, result);
     }
 
-    static void setVars() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter n: ");
-        n = scanner.nextInt();
-        System.out.println("Please enter m: ");
-        k = n - scanner.nextInt();
-        if (n < k) {
-            System.out.println("Please enter n and m such that m<n.");
-            setVars();
-        }
-    }
+
 }
