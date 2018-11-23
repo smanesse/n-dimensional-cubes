@@ -29,10 +29,10 @@ public class nthDimension {
             result = 1; //edge case
         } else {
             //create array of integers 1 through k.
-            long[] nums = new long[n - k + 1];
-            for (int i = 1; i <= nums.length; i++) {
-                nums[i - 1] = i;
-            }
+//            long[] nums = new long[n - k + 1];
+//            for (int i = 1; i <= nums.length; i++) {
+//                nums[i - 1] = i;
+//            }
 
             /*Recursively generates a set of numbers of a specific order. The difference between each number
              *in the set is given by the number in the previous order set.
@@ -57,7 +57,7 @@ public class nthDimension {
             result = (long) Math.pow(2, k) * nums[n - k]; //multiply the mth term of the k order set by 2^k
             */
 
-            //Then I looked up the actual solution, which was O(n), so I decided I should probably use that instead.
+            //Then I looked up the actual solution, which was much better, so I decided I should probably use that instead.
             result = (long) Math.pow(2, k) * factorial(n)/(factorial(n-k)*factorial(k));
         }
         System.out.printf("Number of %d-dimensional squares in %d-dimensional cuboid: %d", (n - k), n, result);
